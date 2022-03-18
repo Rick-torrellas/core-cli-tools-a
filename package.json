@@ -1,0 +1,23 @@
+{
+  "name": "@core_/cli-tools",
+  "version": "0.1.0",
+  "description": "",
+  "main": "./build/index.js",
+  "scripts": {
+    "test": ""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Rick-torrellas/core-cli-tools"
+  },
+  "bugs": {
+    "url": "https://github.com/Rick-torrellas/core-cli-tools/issues"
+  },
+  "keywords": [],
+  "author": "Ricardo Torrellas <ricardo.torrejas@gmail.com> (https://github.com/Rick-torrellas)",
+  "license": "MIT",
+  "devDependencies": {
+    "eslint": "^8.11.0",
+    "eslint-config-prettier": "^8.5.0"
+  }
+}
