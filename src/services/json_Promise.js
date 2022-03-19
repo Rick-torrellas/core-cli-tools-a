@@ -363,11 +363,12 @@ function checkJson({ Debug, file }) {
  */
 //TODO: crear una estancia de la funcion, donde no le entreguen solo la data, y el tengo que hacer el proceso completo, para leer el jason.
 //TODO: dividir esta funcion en dos, una parte que verifique si existe detrminada propiedad y otra que la cree vacia.
-function emptyObject({Debug, data, Package, read, property }) {
+function emptyObject({Debug, data, Package, property }) {
+//TODO: creo que hay que eliminar esta funcion
   const NAME_ = "emptyObject";
   debug.name(Debug, NAME_, "sub-services");
   return new Promise((resolve, reject) => {
-    if (data[property] !== undefined && data.hasOwnProperty(property)) {
+    if (data[property] !== undefined && Object.prototype.hasOwnProperty.call(data, property)) {
       data.dependencies = {};
       const complete = JSON.stringify(data, null, 2);
       writeFile(Package, complete, (err) => {
@@ -401,7 +402,7 @@ function emptyObject({Debug, data, Package, read, property }) {
  * @param properties La propiedad/es que se estan verificando. Puede ser una string o un array de strings.
  * @return {Promise<boolean>} Retorna `true` si existe la propiedad/es y `false` en caso de que no.
  */
-function checkProperties({ Debug, file, properties }) {
+function checkProperties({ Debug}) {
   const NAME_ = "checkProperty";
   debug.name(Debug, NAME_, "subservice");
 }

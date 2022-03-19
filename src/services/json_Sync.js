@@ -2,8 +2,10 @@
  * Modulo con funciones syncronas para controlar las funciones relacionadas con los archivos json.
  * @module services/env
  */
-const debug = require("./debug");
-const { writeFile, readFileSync } = require("fs");
+// const debug = require("./debug");
+const {  readFileSync } = require("fs");
+
+export let json_Sync = {}
 /**
  * Crea una nueva propiedad a la data, y se asigna un valor.
  * @return {object} Retorna la data modificaada
@@ -75,51 +77,7 @@ function replacePropertyData({ data, properties, value }) {
 * debug - Para activar el modo debug.
 * @param Package - La ruta del package.json que se esta editando.
  */
-//TODO: falta por terminar.
-function verifyPackage({ Debug, Package }) {
-  const NAME_ = "verifyNucleo";
-  debug.name(Debug, NAME_, "sub-service");
-  const arg = {
-    Package,
-  };
-  debug.values(Debug,arg);
-}
-/**
- * Inyectara los scripts, al package.json.
- * 
- * ? esta funcion podria resultilizarse, si se enfoca en agregar cualquier tipo de porpiedades a un objeto, puede pertenencer al serivicio json_, y e podria llamar addProperties
- * @param {{
-    debug: boolean
-    data: any
-    scripts: string[]
-    Package: string
- * }}
- * debug - Para activar el modo debug
-* @param scripts - Los scripts para ser inyectados en el package.json
- * @param data - Contiene el package.json abierto y parseado.
- * @param Package - La ruta del package.json que se editara.
- * @return {void}
- */
-function addObjects({ Debug, data, scripts, Package }) {
-  const NAME_ = "addObjects";
-  debug.name(Debug, NAME_, "service");
-  const object = scripts;
-  for (const key in object) {
-    if (object.hasOwnProperty.call(object, key)) {
-      const values = object[key];
-      data.scripts[key] = values;
-    }
-  }
-  const complete = JSON.stringify(data, null, 2);
-  writeFile(Package, complete, (err) => {
-    if (err) {
-      error("Error al modificar el package.json");
-      throw err;
-    }
-    console.log("package.json modificado!");
-  });
-  debug.done(Debug, NAME_);
-}
+//TODO: falta por terminar.function verifyPackage
 /**
  * Verificara si existe una porpiedad en un archivo json.
  *
@@ -147,7 +105,7 @@ function checkProperty({ data, properties }) {
     );
   //TODO: properties tambien debria aceptar numeros, :D tratar de que acepte solo strings y numeros.
   if (properties.indexOf(".") == -1) {
-    if (data[properties] !== undefined && data.hasOwnProperty(properties)) {
+    if (data[properties] !== undefined && Object.prototype.hasOwnProperty.call(data, properties)) {
       return true;
     } else {
       return false;
@@ -166,7 +124,7 @@ function checkProperty({ data, properties }) {
       let props = arrProps.join(".");
       let condition_a = eval(`data.${properties}`);
       let condition_b = eval(`data.${props}`);
-      if (condition_a !== undefined && condition_b.hasOwnProperty(lastProp)) {
+      if (condition_a !== undefined && Object.prototype.hasOwnProperty.call(condition_b, lastProp)) {
         return true;
       } else {
         return false;
@@ -175,7 +133,7 @@ function checkProperty({ data, properties }) {
       let noLast = arrProps.join(".");
       let condition_a = eval(`data.${properties}`);
       let condition_b = eval(`data.${noLast}`);
-      if (condition_a !== undefined && condition_b.hasOwnProperty(lastProp)) {
+      if (condition_a !== undefined && Object.prototype.hasOwnProperty.call(condition_b, lastProp)) {
         return true;
       } else {
         return false;
@@ -206,7 +164,7 @@ function checkPropertyOpen({ file, properties }) {
   if (!read) throw new Error(`El archivo json esta vacio`);
   //TODO: properties tambien debria aceptar numeros, :D tratar de que acepte solo strings y numeros.
   if (properties.indexOf(".") == -1) {
-    if (data[properties] !== undefined && data.hasOwnProperty(properties)) {
+    if (data[properties] !== undefined && Object.prototype.hasOwnProperty.call(data, properties)) {
       return true;
     } else {
       return false;
@@ -225,7 +183,7 @@ function checkPropertyOpen({ file, properties }) {
       let props = arrProps.join(".");
       let condition_a = eval(`data.${properties}`);
       let condition_b = eval(`data.${props}`);
-      if (condition_a !== undefined && condition_b.hasOwnProperty(lastProp)) {
+      if (condition_a !== undefined && Object.prototype.hasOwnProperty.call(condition_b, lastProp)) {
         return true;
       } else {
         return false;
@@ -234,7 +192,7 @@ function checkPropertyOpen({ file, properties }) {
       let noLast = arrProps.join(".");
       let condition_a = eval(`data.${properties}`);
       let condition_b = eval(`data.${noLast}`);
-      if (condition_a !== undefined && condition_b.hasOwnProperty(lastProp)) {
+      if (condition_a !== undefined && Object.prototype.hasOwnProperty.call(condition_b, lastProp)) {
         return true;
       } else {
         return false;
@@ -293,11 +251,6 @@ function checkPropertyTypeOpen({ file, properties }) {
   //TODO: properties tambien debria aceptar numeros, :D tratar de que acepte solo strings y numeros.
   let resultado = eval(`data.${properties}`);
   return typeof resultado;
-}
-function replacePropertyData() {
-  /*
-   *
-   */
 }
 /**
  * Agrega valores a un objeto json.
@@ -470,13 +423,11 @@ function putValueDataOpen({ file, properties, value }) {
   }
   return data;
 }
-module.exports = {
-  checkProperty,
-  checkPropertyOpen,
-  checkPropertyType,
-  checkPropertyTypeOpen,
-  putValueData,
-  putValueDataOpen,
-  replacePropertyData,
-  createPropertyData,
-};
+json_Sync.createPropertyData = createPropertyData;
+json_Sync.replacePropertyData = replacePropertyData;
+json_Sync.checkProperty = checkProperty;
+json_Sync.checkPropertyOpen = checkPropertyOpen
+json_Sync.checkPropertyType = checkPropertyType;
+json_Sync.checkPropertyTypeOpen = checkPropertyTypeOpen;
+json_Sync.putValueData = putValueData;
+json_Sync.putValueDataOpen = putValueDataOpen;
