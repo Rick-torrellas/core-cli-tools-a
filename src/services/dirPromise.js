@@ -1,11 +1,11 @@
-const {mkdirSync,rmSync,existsSync} = require("fs");
-const {execSync} = require("child_process");
-const debug = require('./debug');
+import {mkdirSync,rmSync,existsSync} from "fs";
+import {execSync}  from "child_process";
+import {cliconsole} from "./cliconsole";
 //TODO: se puede crear una funcion replaceDir, y ejecutar createDir({dir},{Debug,overwrite=true,recursive=true})
 function checkDir({dir},{Debug}={Debug:false}) {
 //TODO: crear una vercion de esta funcion que verifique el contenido de la carpeta checkDirContent()
     const name = "checkDir";
-    debug.name(Debug, name);
+    cliconsole.name(Debug, name);
     return new Promise(resolve=>{
       resolve(existsSync(dir))
     })
@@ -17,7 +17,7 @@ function checkDir({dir},{Debug}={Debug:false}) {
  */
 function editAtribute({attr,dir,state},{Debug}={Debug:false}) {
   const name = "editAtribute";
-  debug.name(Debug, name);
+  cliconsole.name(Debug, name);
   return new Promise((resolve)=>{
       resolve(checkDir({dir},{Debug}));
   })
@@ -35,8 +35,8 @@ function editAtribute({attr,dir,state},{Debug}={Debug:false}) {
     }
   })
   .catch(err => {
-    debug.error(err);
-    debug.error(err.lineNumer);
+    cliconsole.error(err);
+    cliconsole.error(err.lineNumer);
   });
 }
 /** @param {{
@@ -47,11 +47,11 @@ function editAtribute({attr,dir,state},{Debug}={Debug:false}) {
 async function addContent({content},{Debug}={Debug:false}) {
   try {
     const NAME_ = "addContent";
-  debug.name(Debug, NAME_);
+  cliconsole.name(Debug, NAME_);
   const arg = {
     content,
   };
-  debug.values(Debug, arg);
+  cliconsole.values(Debug, arg);
   for (const key in content) {
     if (Object.hasOwnProperty.call(content, key)) {
       const element = content[key];
@@ -62,11 +62,11 @@ async function addContent({content},{Debug}={Debug:false}) {
       }
     }
   }
-  debug.done(Debug, NAME_);
+  cliconsole.done(Debug, NAME_);
   return true;
   } catch (error) {
-    debug.error(error);
-    debug.error(error.lineNumer);
+    cliconsole.error(error);
+    cliconsole.error(error.lineNumer);
   }
 }
 /**
@@ -77,24 +77,24 @@ function createDir({dir},{Debug,overwrite,recursive}={Debug:false,overwrite:fals
 //TODO: crear una vercion de esta funcion que verifique el contenido de la carpeta checkDirContent()
 //TODO: eliminar el overwrite y mas bien crear una funcion especial para remplazar una carpeta, usando el mismo proceso del overwrite, replaceDir.   
   const name = "createDir";
-    debug.name(Debug, name);
+    cliconsole.name(Debug, name);
     return new Promise(resolve=>{ 
       resolve(existsSync(dir))
     })
     .then(res => {
       if(res) {
-          debug.warning(Debug, `La carpeta: ${dir} ya existe`);
+          cliconsole.warning(Debug, `La carpeta: ${dir} ya existe`);
           if(overwrite) {
-          debug.warning(Debug, `Se va a sobreescribir la carpeta: ${dir}`);  
+          cliconsole.warning(Debug, `Se va a sobreescribir la carpeta: ${dir}`);  
           rmSync(dir,{recursive: true,force: true});
         } else {
-            debug.done(Debug, name);
+            cliconsole.done(Debug, name);
           throw new Error(`La carpeta: ${dir} ya existe`);
         }
       }
       mkdirSync(dir, {recursive: recursive});
-      debug.info(`Carpeta: ${dir} creada`);
-      debug.done(Debug, name);
+      cliconsole.info(`Carpeta: ${dir} creada`);
+      cliconsole.done(Debug, name);
       return true;
     })
     .catch(err => {
@@ -102,9 +102,8 @@ function createDir({dir},{Debug,overwrite,recursive}={Debug:false,overwrite:fals
       console.log(err.lineNumer);
     })
 }
-module.exports = {
-    createDir,
-    editAtribute,
-    addContent,
-    checkDir
-}
+export let dirPromise = {}
+dirPromise.checkDir = checkDir;
+dirPromise.editAtribute = editAtribute;
+dirPromise.createDir = createDir;
+dirPromise.addContent = addContent;

@@ -1,5 +1,5 @@
-const { existsSync,writeFileSync} = require("fs");
-const debug = require("./debug");
+import { existsSync,writeFileSync} from "fs";
+import {cliconsole} from "./cliconsole";
 //TODO: comentar mejor 🍡
 /**
  * Vertifica si existe un archivo
@@ -7,7 +7,7 @@ const debug = require("./debug");
  */
 function checkFile({file},{Debug}) {
     const name = "checkFile";
-    debug.name(Debug, name);
+    cliconsole.name(Debug, name);
     return new Promise((resolve) => {
         if (existsSync(file)) {
             resolve(true);
@@ -28,22 +28,22 @@ function checkFile({file},{Debug}) {
 function putContent({file,content},{Debug,force}={Debug:false,force:false}) {
 //TODO: crear una vercion de esta funcion, que anada contenido al contendo ya existente del archivo, addContent usando fs.appendFile
     const name = putContent.name;
-    debug.name(Debug, name);
+    cliconsole.name(Debug, name);
     return new Promise((resolve,reject) => {
     //TODO: ejecutar esto como una promesa, checkfile, es una promesa no se puede ejecutar asi, mirar createFile.
     if (!checkFile({file},{Debug})) {
         if (force) {
             writeFileSync(file, content);
-            debug.data(Debug, name, "Archivo creado");
-            debug.done(Debug, name);
+            cliconsole.data(Debug, name, "Archivo creado");
+            cliconsole.done(Debug, name);
             resolve(true); 
         }
         reject(new Error(`El archivo: ${file} no existe`));
     } 
         //PROCESS
         writeFileSync(file, content);
-        debug.data(Debug, name, "Archivo creado");
-        debug.done(Debug, name);
+        cliconsole.data(Debug, name, "Archivo creado");
+        cliconsole.done(Debug, name);
         resolve(true);
     });
 }
@@ -53,7 +53,7 @@ function putContent({file,content},{Debug,force}={Debug:false,force:false}) {
  */
 function createFile({file,content},{Debug}={Debug:false}) {
     const name = createFile.name;
-    debug.name(Debug, name);
+    cliconsole.name(Debug, name);
     return new Promise((resolve) => {
         resolve(checkFile({file},{Debug}));
     })
@@ -62,19 +62,18 @@ function createFile({file,content},{Debug}={Debug:false}) {
             throw new Error(`El archivo: ${file} ya existe`); 
         } 
         writeFileSync(file, content);
-        debug.data(Debug, name, `Archivo: ${file} creado`);
-        debug.done(Debug, name);
+        cliconsole.data(Debug, name, `Archivo: ${file} creado`);
+        cliconsole.done(Debug, name);
         return true; 
     })
     .catch(err => {
-        debug.error(name, err);
+        cliconsole.error(name, err);
         console.log(err.lineNumber);
-        debug.done(Debug, name);
+        cliconsole.done(Debug, name);
         return err;
     });
 }
-module.exports = {
-    checkFile,
-    putContent,
-    createFile,
-}
+export let filePromise = {}
+filePromise.checkFile = checkFile;
+filePromise.putContent = putContent;
+filePromise.createFile = createFile;

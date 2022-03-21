@@ -3,8 +3,7 @@
  * @module services/env
  */
 // const debug = require("./debug");
-const {  readFileSync } = require("fs");
-
+import { readFileSync } from "fs";
 export let json_Sync = {}
 /**
  * Crea una nueva propiedad a la data, y se asigna un valor.

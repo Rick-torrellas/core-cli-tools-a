@@ -2,9 +2,10 @@
  * Modulo con promesas para controlar las funciones relacionadas con los archivos json.
  * @module services/env
  */ //
-const debug = require("./debug");
-const json_Sync = require("./json_Sync");
-const { readFile, writeFile } = require("fs");
+import { cliconsole } from "./cliconsole";
+import { json_Sync } from "./json_Sync";
+import {readFile,writeFile} from "fs";
+//TODO: remplazar readFile y writeFile por sus verciones asyncronas.
 //TODO: crear una funcion que inicie un arcivo json, osea que le coloque los {} iniciales. o []
 /* TODO: propiedades y valores
  Proceso de modificacion de propiedades y valores
@@ -33,11 +34,11 @@ const name = "createProperty";
       const complete = JSON.stringify(data_, null, 2);
       writeFile(file, complete, (err) => {
         if (err) {
-          debug.done(Debug, name);
+          cliconsole.done(Debug, name);
           return reject(err);
         }
-        debug.data(Debug, "Propiedad creada", value);
-        debug.done(Debug, name);
+        cliconsole.data(Debug, "Propiedad creada", value);
+        cliconsole.done(Debug, name);
         resolve(true);
     })
  })
@@ -48,18 +49,18 @@ const name = "createProperty";
 function replaceProperty({ Debug = false, data, properties, value,file }) {
 //TODO: crear una vercion open de esta funcion.  
 const NAME_ = "readJson";
-debug.name(Debug,NAME_, "service");
+cliconsole.name(Debug,NAME_, "service");
 // CONDICIONES
 return new Promise((resolve, reject) => {
   let data_ = json_Sync.replacePropertyData(data, properties,value);
   const complete = JSON.stringify(data_, null, 2);
   writeFile(file, complete, (err) => {
     if (err) {
-      debug.done(Debug, NAME_);
+      cliconsole.done(Debug, NAME_);
       return reject(err);
     }
-    debug.data(Debug, "Objeto remplazado", value);
-    debug.done(Debug, NAME_);
+    cliconsole.data(Debug, "Objeto remplazado", value);
+    cliconsole.done(Debug, NAME_);
     resolve(true);
 })
 })
@@ -74,7 +75,7 @@ return new Promise((resolve, reject) => {
  */
 function readJson({ Debug = false, file }) {
   const NAME_ = "readJson";
-  debug.name(Debug,NAME_, "service");
+  cliconsole.name(Debug,NAME_, "service");
   if (file == undefined) throw new Error("file esta indefinido");
   //TODO: crear un checket para que solo pueda leer .json, la viana es que indexOf() es sensibles a las mayusculas, entonces es mejor usar search() pero ese usa expreciones regulares.
   //TODO: implementar esta funcion en todas las funciones que requieran readFile.
@@ -83,7 +84,7 @@ function readJson({ Debug = false, file }) {
   return new Promise((resolve, reject) => {
     readFile(file, "utf-8", (err, read) => {
       if (err) return reject(err);
-      if (!read) debug.warning("El archivo json esta vacio");
+      if (!read) cliconsole.warning("El archivo json esta vacio");
       resolve(read);
     });
   });
@@ -98,7 +99,7 @@ function readJson({ Debug = false, file }) {
  */
 function readJsonObject({ Debug = false, file }) {
   const NAME_ = "readJson";
-  debug.name(Debug,NAME_, "service");
+  cliconsole.name(Debug,NAME_, "service");
   if (file == undefined) throw new Error("file esta indefinido");
   if (typeof file !== "string")
     throw new Error(`file nada mas puede ser string, file es ${typeof file}`);
@@ -132,7 +133,7 @@ function readJsonObject({ Debug = false, file }) {
  */
 function putValuePropertyOpen({ Debug = false, value, file, properties }) {
   const NAME_ = "putValuePropertyOpen";
-  debug.name(Debug, NAME_, "service");
+  cliconsole.name(Debug, NAME_, "service");
   if (value == undefined) throw new Error("value esta indefinido");
   if (file == undefined) throw new Error("file esta indefinido");
   if (properties == undefined) throw new Error("properties esta indefinido");
@@ -178,17 +179,17 @@ function putValuePropertyOpen({ Debug = false, value, file, properties }) {
       const complete = JSON.stringify(data_, null, 2);
       writeFile(file, complete, (err) => {
         if (err) {
-          debug.done(Debug, NAME_);
+          cliconsole.done(Debug, NAME_);
           throw err;
         }
         console.data("Objetos crados", value);
-        debug.done(Debug, NAME_);
+        cliconsole.done(Debug, NAME_);
         return;
       });
       return true;
     })
     .catch((err) => {
-      debug.error(err);
+      cliconsole.error(err);
     });
 }
 /**
@@ -213,7 +214,7 @@ function putValuePropertyOpen({ Debug = false, value, file, properties }) {
 function putValueProperty({ Debug = false, value, data, properties,file }) {
   //TODO: crear una vercion de esta funcion open addValueOpen
   const NAME_ = "putValueProperty";
-  debug.name(Debug, NAME_, "service");
+  cliconsole.name(Debug, NAME_, "service");
   if (value == undefined) throw new Error("value esta indefinido");
   if (data == undefined) throw new Error("data esta indefinido");
   if (properties == undefined) throw new Error("properties esta indefinido");
@@ -259,11 +260,11 @@ function putValueProperty({ Debug = false, value, data, properties,file }) {
     const complete = JSON.stringify(data_, null, 2);
     writeFile(file, complete, (err) => {
       if (err) {
-        debug.done(Debug, NAME_);
+        cliconsole.done(Debug, NAME_);
         return reject(err);
       }
-      debug.data(Debug, "Objetos crados", value);
-      debug.done(Debug, NAME_);
+      cliconsole.data(Debug, "Objetos crados", value);
+      cliconsole.done(Debug, NAME_);
       resolve(true);
     });
   });
@@ -280,16 +281,16 @@ function putValueProperty({ Debug = false, value, data, properties,file }) {
  */
  function checkProperty({Debug,data, properties}) {
   const NAME_ = "checkPropertyOpen";
-  debug.name(Debug,NAME_, "service");
+  cliconsole.name(Debug,NAME_, "service");
   return new Promise((resolve) => {
 // PROCESS
     if (json_Sync.checkProperty({data,properties})) {
-      debug.data(Debug, `Existen las propiedades ${properties}`);
-      debug.done(Debug, NAME_);
+      cliconsole.data(Debug, `Existen las propiedades ${properties}`);
+      cliconsole.done(Debug, NAME_);
       resolve(true);
     } else {
-      debug.warning(Debug, `No existe la propiedad ${properties}`);
-      debug.done(Debug, NAME_);
+      cliconsole.warning(Debug, `No existe la propiedad ${properties}`);
+      cliconsole.done(Debug, NAME_);
       resolve(false);
     }
   });
@@ -306,7 +307,7 @@ function putValueProperty({ Debug = false, value, data, properties,file }) {
 function checkPropertyOpen({Debug,file, properties}) {
   //TODO: actualizar. ver checkProperty sync.
   const NAME_ = "checkPropertyOpen";
-  debug.name(Debug,NAME_, "service");
+  cliconsole.name(Debug,NAME_, "service");
   return new Promise((resolve, reject) => {
     readFile(file, "utf-8", (err, data) => {
       if (err) {
@@ -318,12 +319,12 @@ function checkPropertyOpen({Debug,file, properties}) {
     .then((read) => {
       const data = JSON.parse(read);
       if (json_Sync.checkProperty({data,properties})) {
-        debug.data(Debug, `Existen las propiedades ${properties}`);
-        debug.done(Debug, NAME_);
+        cliconsole.data(Debug, `Existen las propiedades ${properties}`);
+        cliconsole.done(Debug, NAME_);
         return true;
       } else {
-        debug.warning(Debug, `No existe la propiedad ${properties}`);
-        debug.done(Debug, NAME_);
+        cliconsole.warning(Debug, `No existe la propiedad ${properties}`);
+        cliconsole.done(Debug, NAME_);
         return false;
       }
     })
@@ -343,50 +344,11 @@ function checkPropertyOpen({Debug,file, properties}) {
 //TODO: falta por terminar.
 function checkJson({ Debug, file }) {
   const NAME_ = "verifyNucleo";
-  debug.name(Debug,NAME_, "sub-service");
+  cliconsole.name(Debug,NAME_, "sub-service");
   const arg = {
     file,
   };
-  debug.values(Debug,arg);
-}
-/**
- * 
- * @param {{
-    debug: boolean
-    data: any
-    Package: string
- * }}
- * debug - Para activar el modo debug.
- * @param data - El package.json que se esta editando.
- * @param Package - La ruta del package.json que se esta editando.
- * @return 
- */
-//TODO: crear una estancia de la funcion, donde no le entreguen solo la data, y el tengo que hacer el proceso completo, para leer el jason.
-//TODO: dividir esta funcion en dos, una parte que verifique si existe detrminada propiedad y otra que la cree vacia.
-function emptyObject({Debug, data, Package, property }) {
-//TODO: creo que hay que eliminar esta funcion
-  const NAME_ = "emptyObject";
-  debug.name(Debug, NAME_, "sub-services");
-  return new Promise((resolve, reject) => {
-    if (data[property] !== undefined && Object.prototype.hasOwnProperty.call(data, property)) {
-      data.dependencies = {};
-      const complete = JSON.stringify(data, null, 2);
-      writeFile(Package, complete, (err) => {
-        if (err) {
-          return reject(`Error al modificar el package.json \n ${err}`);
-        }
-        debug.info("Dependencias eliminadas");
-        const response = {
-          data,
-          Package,
-        };
-        debug.done(Debug, NAME_);
-        resolve(response);
-      });
-    } else {
-      return reject(`Ya existe la propiedad ${property}`);
-    }
-  });
+  cliconsole.values(Debug,arg);
 }
 /**
  * Verifica un grupo de propiedades dentro de un json.
@@ -404,20 +366,18 @@ function emptyObject({Debug, data, Package, property }) {
  */
 function checkProperties({ Debug}) {
   const NAME_ = "checkProperty";
-  debug.name(Debug, NAME_, "subservice");
+  cliconsole.name(Debug, NAME_, "subservice");
 }
 //TODO: crer una funcion que anadir el primer {} a un archivo json vacio.
 //TODO: crear una funcion que verifique si existen propiedades internas con un switch.
-module.exports = {
-  checkProperties,
-  replaceProperty,
-  readJson,
-  readJsonObject,
-  putValuePropertyOpen,
-  putValueProperty,
-  checkPropertyOpen,
-  checkJson,
-  emptyObject,
-  checkProperty,
-  createProperty
-};
+export let json_Promise = {}
+json_Promise.checkProperty = checkProperty;
+json_Promise.checkPropertyOpen = checkPropertyOpen;
+json_Promise.checkJson = checkJson;
+json_Promise.createProperty = createProperty;
+json_Promise.replaceProperty = replaceProperty;
+json_Promise.readJson = readJson;
+json_Promise.readJsonObject = readJsonObject;
+json_Promise.putValueProperty = putValueProperty;
+json_Promise.putValuePropertyOpen = putValuePropertyOpen;
+json_Promise.checkProperties = checkProperties;

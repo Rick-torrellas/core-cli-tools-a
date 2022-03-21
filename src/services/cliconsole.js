@@ -5,13 +5,13 @@
 const chalk = require('chalk');
 const {log} = console;
 
-export let debug = {}
+export let cliconsole = {}
 /**
  * El mensaje para indicar que el modo debug esta activado.
  * @param {string} mensaje El mensaje para indicar que el modo debugger esta activado. 
  * @returns {void}
  */
-export function start(Debug,mensaje = 'Debug mode activated') {
+function start(Debug,mensaje = 'Debug mode activated') {
     if (Debug) {
         log(`${chalk.red(mensaje)}`);
     }
@@ -22,7 +22,7 @@ export function start(Debug,mensaje = 'Debug mode activated') {
  * @param {string} type La clasificacion de funcion que uno le quiera dar.
  * @returns {void}
  */
-export function name(Debug,name,type='no-type') {
+function name(Debug,name,type='no-type') {
     if (Debug) {
         log(`${chalk.bgCyan('Process Name:')} ${name} \n`,`${chalk.underline.cyan('Type')}: ${type}`);
     }
@@ -35,7 +35,7 @@ export function name(Debug,name,type='no-type') {
  * @param {string} description La descripcion de la informacion.
  * @returns {void}
  */
-export function info(title,description="no description") {
+function info(title,description="no description") {
         log(`${chalk.blue("Info")}: ${chalk.blue.underline(title)}\n`,description);
 }
 /**
@@ -43,7 +43,7 @@ export function info(title,description="no description") {
  * 
  * **Nota**: necesita tener el debug activado, si quieres usar una vercion que no necesite el debug activado usar {@link info}
  */
-export function data(Debug,title,description="no description") {
+function data(Debug,title,description="no description") {
     if (Debug) {
         log(`${chalk.blue("Info")}: ${chalk.blue.underline(title)}\n`,description);
     }
@@ -56,14 +56,14 @@ export function data(Debug,title,description="no description") {
  * @param {*} error Una explicacion detallada del error. 
  * @returns {void}
  */
-export function error(title,error = 'no description') {
+function error(title,error = 'no description') {
     console.error(`${chalk.red('ERROR')}: ${chalk.red.underline(title)}\n`,error);
 }
 /**
  * Indica que una operacion se ejecuto satisfactoriamente.
  *  @param {string} title El titulo de la operacion.
  */
-export function success(Debug,message='no-title') {
+function success(Debug,message='no-title') {
     if (Debug) {
         log(`${chalk.bgGreen('Success:')} ${message}`)
     }
@@ -76,7 +76,7 @@ export function success(Debug,message='no-title') {
  * @param {*} description La descripcion de la advertencia.
  * @returns {void}
  */
-export function warning(Debug,title,description='no description') {
+function warning(Debug,title,description='no description') {
     if (Debug) {
     return log(`${chalk.yellow('WARNING')}: ${chalk.yellow.underline(title)}\n`,description)
     }
@@ -86,7 +86,7 @@ export function warning(Debug,title,description='no description') {
  * @param {*} values Valores de una funcion
  * @returns {void}
  */
-export function values(Debug,values) {
+function values(Debug,values) {
     if (Debug) {
         return log(`${chalk.green('Values')}:\n`, values);
     }
@@ -97,9 +97,17 @@ export function values(Debug,values) {
  * @param {*} mensaje El mensaje final.
  * @returns 
  */
-export function done(Debug,title,mensaje = 'Done') {
+function done(Debug,title,mensaje = 'Done') {
     if (Debug) {
         return log(`${title}: ${chalk.blue(mensaje)}`);
     }
 }
-debug.start = start;
+cliconsole.start = start;
+cliconsole.name = name;
+cliconsole.info = info;
+cliconsole.data = data;
+cliconsole.error = error;
+cliconsole.success = success;
+cliconsole.warning = warning;
+cliconsole.values = values;
+cliconsole.done = done;
