@@ -6,14 +6,15 @@ const chalk = require('chalk');
 const {log} = console;
 
 export let cliconsole = {}
+//TODO: crear una funcion command, que sirve para iniciar un comando, que muestre los argumentos pasados, informacion,etc.
 /**
  * El mensaje para indicar que el modo debug esta activado.
  * @param {string} mensaje El mensaje para indicar que el modo debugger esta activado. 
  * @returns {void}
  */
-function start(Debug,mensaje = 'Debug mode activated') {
-    if (Debug) {
-        log(`${chalk.red(mensaje)}`);
+function start({verbose,message}={verbose:false,message:'vebose mode activated'}) {
+    if (verbose) {
+        log(`${chalk.red(message)}`);
     }
 }
 /**
@@ -22,9 +23,9 @@ function start(Debug,mensaje = 'Debug mode activated') {
  * @param {string} type La clasificacion de funcion que uno le quiera dar.
  * @returns {void}
  */
-function name(Debug,name,type='no-type') {
-    if (Debug) {
-        log(`${chalk.bgCyan('Process Name:')} ${name} \n`,`${chalk.underline.cyan('Type')}: ${type}`);
+function name(name,{verbose}={verbose:false}) {
+    if (verbose) {
+        log(`${chalk.bgCyan('Process Name:')} ${name}`);
     }
 }
 /**
@@ -35,7 +36,7 @@ function name(Debug,name,type='no-type') {
  * @param {string} description La descripcion de la informacion.
  * @returns {void}
  */
-function info(title,description="no description") {
+function info(title,{description}={description:"no-description"}) {
         log(`${chalk.blue("Info")}: ${chalk.blue.underline(title)}\n`,description);
 }
 /**
@@ -43,8 +44,8 @@ function info(title,description="no description") {
  * 
  * **Nota**: necesita tener el debug activado, si quieres usar una vercion que no necesite el debug activado usar {@link info}
  */
-function data(Debug,title,description="no description") {
-    if (Debug) {
+function data(title,{description,verbose}={description:"no description",verbose:false}) {
+    if (verbose) {
         log(`${chalk.blue("Info")}: ${chalk.blue.underline(title)}\n`,description);
     }
 }
@@ -56,16 +57,22 @@ function data(Debug,title,description="no description") {
  * @param {*} error Una explicacion detallada del error. 
  * @returns {void}
  */
-function error(title,error = 'no description') {
-    console.error(`${chalk.red('ERROR')}: ${chalk.red.underline(title)}\n`,error);
+function error(error) {
+    if (error.name == undefined || error.message == undefined || error.stack == undefined) {
+        console.error(`${chalk.red('ERROR')}: `,`${error}`);
+    } else {
+        const {name,message,stack} = error;
+        console.error(`${chalk.red('ERROR')}: `,`${name}:| ${message} \n ${stack}`);
+    }
+    
 }
 /**
  * Indica que una operacion se ejecuto satisfactoriamente.
  *  @param {string} title El titulo de la operacion.
  */
-function success(Debug,message='no-title') {
-    if (Debug) {
-        log(`${chalk.bgGreen('Success:')} ${message}`)
+function success(name,{message,verbose}={message:'no message',verbose:false}) {
+    if (verbose) {
+        log(`${chalk.bgGreen('Success: ')}${name} - ${message}`);
     }
 }
 /**
@@ -76,9 +83,9 @@ function success(Debug,message='no-title') {
  * @param {*} description La descripcion de la advertencia.
  * @returns {void}
  */
-function warning(Debug,title,description='no description') {
-    if (Debug) {
-    return log(`${chalk.yellow('WARNING')}: ${chalk.yellow.underline(title)}\n`,description)
+function warning(title,{description,verbose}={description:'no description',verbose:false}) {
+    if (verbose) {
+    return log(`${chalk.yellow('WARNING')}: ${chalk.yellow.underline(title)}\n`,description);
     }
 }
 /**
@@ -86,8 +93,9 @@ function warning(Debug,title,description='no description') {
  * @param {*} values Valores de una funcion
  * @returns {void}
  */
-function values(Debug,values) {
-    if (Debug) {
+function values(values,{verbose}={verbose:false}) {
+//TODO: tal vez implemntar console.table.
+    if (verbose) {
         return log(`${chalk.green('Values')}:\n`, values);
     }
 }
@@ -97,8 +105,8 @@ function values(Debug,values) {
  * @param {*} mensaje El mensaje final.
  * @returns 
  */
-function done(Debug,title,mensaje = 'Done') {
-    if (Debug) {
+function done(title,{mensaje,verbose}={mensaje:'Done',verbose:false}) {
+    if (verbose) {
         return log(`${title}: ${chalk.blue(mensaje)}`);
     }
 }
