@@ -373,19 +373,25 @@ function checkPropertyOpen(file, properties, { verbose } = { verbose: false }) {
   //TODO: actualizar. ver checkProperty sync.
   const name = checkPropertyOpen.name;
   cliconsole.name(name, { verbose });
-  return new Promise(resolve => {
+  return new Promise((resolve) => {
     const data = readFileSync(file, "utf-8");
     resolve(data);
   })
     .then((read) => {
       const data = JSON.parse(read);
       if (json_Sync.checkProperty({ data, properties })) {
-        cliconsole.data(name,{description:`Existen las propiedades ${properties}`,verbose});
-        cliconsole.done(name,{verbose});
+        cliconsole.data(name, {
+          description: `Existen las propiedades ${properties}`,
+          verbose,
+        });
+        cliconsole.done(name, { verbose });
         return true;
       } else {
-        cliconsole.warning(name,{description:`No existe la propiedad ${properties}`,verbose});
-        cliconsole.done(name,{verbose});
+        cliconsole.warning(name, {
+          description: `No existe la propiedad ${properties}`,
+          verbose,
+        });
+        cliconsole.done(name, { verbose });
         return false;
       }
     })
@@ -404,7 +410,7 @@ function checkPropertyOpen(file, properties, { verbose } = { verbose: false }) {
 * @param Package - La ruta del package.json que se esta editando.
  */
 //TODO: falta por terminar.
-function checkJson(file,{verbose}={verbose:false}) {
+function checkJson(file, { verbose } = { verbose: false }) {
   const name = checkJson.name;
   cliconsole.name(name, { verbose });
 }
