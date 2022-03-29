@@ -1,12 +1,13 @@
 import { mkdirSync, rmSync, existsSync } from "fs";
 import { execSync } from "child_process";
-import { cliconsole } from "./cliconsole";
+import cliconsole from "@core_/cli-console";
 //TODO: se puede crear una funcion replaceDir, y ejecutar createDir({dir},{Debug,overwrite=true,recursive=true})
-function checkDir(dir, { verbose } = { verbose: false }) {
+function checkDir(dir, { verbose = false } = {}) {
   //TODO: crear una vercion de esta funcion que verifique el contenido de la carpeta checkDirContent()
   const name = checkDir.name;
-  cliconsole.name(name, { verbose });
+  cliconsole.process_start({ name, verbose });
   return new Promise((resolve) => {
+    cliconsole.process_done({ name, verbose, status: true });
     resolve(existsSync(dir));
   });
 }
@@ -15,10 +16,11 @@ function checkDir(dir, { verbose } = { verbose: false }) {
  * @param {string} attr Es el atributo que se asignara a la carpeta, estos pueden ser `h`: Hidden,`r`: Read-only,`s`: System,`a`: Archive,`t`: Temporary,`c`: Compressed,`o`: Offline,`i`: Not indexed,`e`: Encrypted,`x`: No Scrub,`u`: UnPinned,`p`: Pinned,`m`: Recall on Data Access
  * @returns
  */
-function editAtribute(dir, attribute, state, { verbose } = { verbose: false }) {
+function editAtribute(dir, attribute, state, { verbose = false } = {}) {
   const name = editAtribute.name;
   let e = new Error();
-  cliconsole.name(name, { verbose });
+  e.name = name;
+  cliconsole.process_start({ name, verbose });
   return new Promise((resolve) => {
     resolve(checkDir(dir, { verbose }));
   })
@@ -45,43 +47,41 @@ function editAtribute(dir, attribute, state, { verbose } = { verbose: false }) {
           e.message(
             `El atributo: ${attribute} no es valido, mirar los atributos validos.`
           );
-          e.name = name;
           throw e;
         }
         if (!(state == "-" || state == "+")) {
           e.message(
             `El estado: ${state} no es valido, mirar los estados validos.`
           );
-          e.name = name;
           throw e;
         }
         const result = execSync(command);
-        console.log(command);
+        cliconsole.info({ message: command });
         console.log(result.toString());
         return true;
       } else {
         e.message(`La carpeta: ${dir} no existe`);
-        e.name = name;
         throw e;
       }
     })
-    .catch((err) => {
-      cliconsole.error(err);
+    .catch((error) => {
+      cliconsole.process_done({name, verbose, status: false });
+      cliconsole.error({ error });
+      return error;
     });
 }
-/** @param {{
-  content: Array<string>, 
- *}}
- * content: Un array con las rutas de las carpetas que se quieren crear. La carpeta contenedora no tiene que existir anteriormente.
+/**
+ * @param {Array<string>}content: Un array con las rutas de las carpetas que se quieren crear. La carpeta contenedora no tiene que existir anteriormente.
  */
-async function addContent(content, { verbose } = { verbose: false }) {
+async function addContent(content, { verbose = false } = {}) {
+  const name = addContent.name;
   try {
-    const NAME_ = addContent.name;
-    cliconsole.name(NAME_, { verbose });
-    const arg = {
+    const name = addContent.name;
+    cliconsole.process_start({ name, verbose });
+    const args = {
       content,
     };
-    cliconsole.values(arg, { verbose });
+    cliconsole.args({ args, verbose });
     for (const key in content) {
       if (Object.hasOwnProperty.call(content, key)) {
         const element = content[key];
@@ -92,10 +92,12 @@ async function addContent(content, { verbose } = { verbose: false }) {
         }
       }
     }
-    cliconsole.done(NAME_, { verbose });
+    cliconsole.process_done({ name, verbose, status: true });
     return true;
   } catch (error) {
-    cliconsole.error(error);
+    cliconsole.process_done({name, verbose, status: false });
+    cliconsole.error({ error });
+    return error;
   }
 }
 /**
@@ -104,15 +106,12 @@ async function addContent(content, { verbose } = { verbose: false }) {
  */
 function createDir(
   dir,
-  { verbose, overwrite, recursive } = {
-    verbose: false,
-    overwrite: false,
-    recursive: false,
-  }
+  { verbose = false, overwrite = false, recursive = false } = {}
 ) {
   const name = createDir.name;
-  cliconsole.name(name, { verbose });
+  cliconsole.process_start({name, verbose });
   let e = new Error();
+  e.name(name);
   //TODO: crear una vercion de esta funcion que verifique el contenido de la carpeta checkDirContent()
   //TODO: eliminar el overwrite y mas bien crear una funcion especial para remplazar una carpeta, usando el mismo proceso del overwrite, replaceDir.
   return new Promise((resolve) => {
@@ -120,34 +119,37 @@ function createDir(
   })
     .then((res) => {
       if (res) {
-        cliconsole.warning(name, {
+        cliconsole.warning({
+          name,
           desciption: `La carpeta: ${dir} ya existe`,
-          verbose,
+          verbose:true,
         });
         if (overwrite) {
-          cliconsole.warning(name, {
+          cliconsole.warning({
+            name,
             description: `Se va a sobreescribir la carpeta: ${dir}`,
-            verbose,
+            verbose:true,
           });
           rmSync(dir, { recursive: true, force: true });
         } else {
-          cliconsole.done(name, { verbose });
           e.message(`La carpeta: ${dir} ya existe`);
-          e.name(name);
           throw e;
         }
       }
       mkdirSync(dir, { recursive: recursive });
-      cliconsole.info(`Carpeta: ${dir} creada`);
-      cliconsole.done(name, { verbose });
+      cliconsole.info({message:`Carpeta: ${dir} creada`});
+      cliconsole.process_done( { name,verbose,status:true });
       return true;
     })
-    .catch((err) => {
-      cliconsole.error(err);
+    .catch((error) => {
+      cliconsole.process_done({name, verbose, status: false });
+      cliconsole.error({error});
+      return error;
     });
 }
-export let dirPromise = {};
+let dirPromise = {};
 dirPromise.checkDir = checkDir;
 dirPromise.editAtribute = editAtribute;
 dirPromise.createDir = createDir;
 dirPromise.addContent = addContent;
+export default dirPromise;

@@ -1,17 +1,19 @@
 import { existsSync, writeFileSync } from "fs";
-import { cliconsole } from "./cliconsole";
+import  cliconsole  from "@core_/cli-console";
 //TODO: comentar mejor 🍡
 /**
  * Vertifica si existe un archivo
  * @return Retorna `true` si existe, `false` si no existe
  */
-function checkFile(file, { verbose } = { verbose: false }) {
+function checkFile(file, { verbose =false } = { }) {
   const name = checkFile.name;
-  cliconsole.name(name, { verbose });
+  cliconsole.process_start({ name,verbose });
   return new Promise((resolve) => {
     if (existsSync(file)) {
+      cliconsole.process_done({ name,verbose,status:true });
       resolve(true);
     } else {
+      cliconsole.process_done({ name,verbose,status:false });
       resolve(false);
     }
   });
@@ -28,26 +30,30 @@ function checkFile(file, { verbose } = { verbose: false }) {
 function putContent(
   file,
   content,
-  { verbose, force } = { verbose: false, force: false }
+  { verbose=false, force=false } = {}
 ) {
   //TODO: crear una vercion de esta funcion, que anada contenido al contendo ya existente del archivo, addContent usando fs.appendFile
   const name = putContent.name;
-  cliconsole.name(name, { verbose });
+  let e = new Error();
+  e.name = name;
+  cliconsole.process_start({name, verbose });
   return new Promise((resolve, reject) => {
     //TODO: ejecutar esto como una promesa, checkfile, es una promesa no se puede ejecutar asi, mirar createFile.
     if (!checkFile(file, { verbose })) {
       if (force) {
         writeFileSync(file, content);
-        cliconsole.data(name, { description: "Archivo creado", verbose });
-        cliconsole.done(name, { verbose });
+        cliconsole.data({ name,message: "Archivo creado", verbose });
+        cliconsole.process_done( {name, verbose,status:true });
         resolve(true);
       }
-      reject(new Error(`El archivo: ${file} no existe`));
+      e.message = `El archivo: ${file} no existe`;
+      cliconsole.process_done({name, verbose,status:false });
+      reject(e);
     }
     //PROCESS
     writeFileSync(file, content);
-    cliconsole.data(name, { description: "Archivo creado", verbose });
-    cliconsole.done(name, { verbose });
+    cliconsole.data( {name, message: "Archivo creado", verbose });
+    cliconsole.process_done( {name, verbose, status:true });
     resolve(true);
   });
 }
@@ -55,34 +61,36 @@ function putContent(
  * Crea un archivo que no exista.
  * @returns Retorna true si logro crearlo. regresa un error si el achivo ya existe.
  */
-function createFile(file, content, { verbose } = { verbose: false }) {
+function createFile(file, content, { verbose = false} = { }) {
   const name = createFile.name;
-  cliconsole.name(name, { verbose });
+  cliconsole.process_start( {name, verbose });
   let e = new Error();
+  e.name = name;
   return new Promise((resolve) => {
     resolve(checkFile(file, { verbose }));
   })
     .then((res) => {
       if (res) {
         e.message = `El archivo: ${file} ya existe`;
-        e.name = name;
         throw e;
       }
       writeFileSync(file, content);
-      cliconsole.data(name, {
-        description: `Archivo: ${file} creado`,
+      cliconsole.data( {
+        name,
+        message: `Archivo: ${file} creado`,
         verbose,
       });
-      cliconsole.done(name, { verbose });
+      cliconsole.process_done({name, verbose, stauts:true });
       return true;
     })
     .catch((err) => {
-      cliconsole.done(name, { verbose });
+      cliconsole.process_done({ name,verbose,status:false });
       cliconsole.error(name, err);
       return err;
     });
 }
-export let filePromise = {};
+let filePromise = {};
 filePromise.checkFile = checkFile;
 filePromise.putContent = putContent;
 filePromise.createFile = createFile;
+export default filePromise;
