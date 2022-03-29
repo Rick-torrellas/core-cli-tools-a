@@ -2,7 +2,7 @@
  * Modulo con promesas para controlar las funciones relacionadas con los archivos json.
  * @module services/env
  */ //
-import cliconsole  from "@core_/cli-console";
+import cliconsole from "@core_/cli-console";
 import { json_Sync } from "./json_Sync";
 import { readFileSync, writeFileSync } from "fs";
 //TODO: remplazar readFile y writeFile por sus verciones asyncronas.
@@ -31,22 +31,24 @@ function createProperty(
   data,
   properties,
   value,
-  { verbose = false } = { }
+  { verbose = false } = {}
 ) {
   return new Promise((resolve) => {
     const name = createProperty.name;
-    cliconsole.process_start( {name, verbose });
+    cliconsole.process_start({ name, verbose });
     //TODO: verficar si existe la propiedad anteriormente, en caso de que existar lanzar un error.
     // PROCESS
-    let data_ = json_Sync.createPropertyData(data,properties,value,{ verbose });
+    let data_ = json_Sync.createPropertyData(data, properties, value, {
+      verbose,
+    });
     const complete = JSON.stringify(data_, null, 2);
     writeFileSync(file, complete);
-    cliconsole.data( {
+    cliconsole.data({
       name,
       message: `Propiedad creada: ${value}`,
       verbose,
     });
-    cliconsole.process_done({name, verbose, status: true });
+    cliconsole.process_done({ name, verbose, status: true });
     resolve(true);
   });
 }
@@ -58,11 +60,11 @@ function replaceProperty(
   data,
   properties,
   value,
-  { verbose = false} = {}
+  { verbose = false } = {}
 ) {
   //TODO: crear una vercion open de esta funcion.
   const name = replaceProperty.name;
-  cliconsole.process_start({name, verbose });
+  cliconsole.process_start({ name, verbose });
   // CONDICIONES
   return new Promise((resolve) => {
     let data_ = json_Sync.replacePropertyData(data, properties, value, {
@@ -70,12 +72,12 @@ function replaceProperty(
     });
     const complete = JSON.stringify(data_, null, 2);
     writeFileSync(file, complete);
-    cliconsole.data( {
+    cliconsole.data({
       name,
       message: `Objeto remplazado: ${value}`,
       verbose,
     });
-    cliconsole.process_done( {name, verbose, status: true });
+    cliconsole.process_done({ name, verbose, status: true });
     resolve(true);
   });
 }
@@ -87,12 +89,9 @@ function replaceProperty(
  * @param file El archivo json a leer.
  * @returns Retorna el contenido del archivo json como string.
  */
-function readJson(
-  file,
-  { verbose = false, enconding = "utf-8" } = {  }
-) {
+function readJson(file, { verbose = false, enconding = "utf-8" } = {}) {
   const name = readJson.name;
-  cliconsole.process_start({name, verbose });
+  cliconsole.process_start({ name, verbose });
   let e = new Error();
   e.name = name;
   if (file == undefined) {
@@ -106,7 +105,7 @@ function readJson(
   }
   return new Promise((resolve) => {
     const read = readFileSync(file, enconding);
-    cliconsole.process_done({name,verbose,status:true});
+    cliconsole.process_done({ name, verbose, status: true });
     resolve(read);
   });
 }
@@ -118,14 +117,11 @@ function readJson(
  * @param file El archivo json a leer.
  * @returns {object} Retorna el contenido del archivo json como un objeto.
  */
-function readJsonObject(
-  file,
-  { verbose = false, enconding = "utf-8"} = { }
-) {
+function readJsonObject(file, { verbose = false, enconding = "utf-8" } = {}) {
   const name = readJsonObject.name;
   let e = new Error();
   e.name = name;
-  cliconsole.process_start({name, verbose });
+  cliconsole.process_start({ name, verbose });
   if (file == undefined) {
     e.message = "file esta indefinido";
     throw e;
@@ -138,9 +134,10 @@ function readJsonObject(
     const read = readFileSync(file, enconding);
     if (!read) {
       e.message = "El archivo json esta vacio";
-      return reject(e);}
+      return reject(e);
+    }
     let data = JSON.parse(read);
-    cliconsole.process_done({name,verbose,status:true});
+    cliconsole.process_done({ name, verbose, status: true });
     resolve(data);
   });
 }
@@ -161,12 +158,12 @@ function putValuePropertyOpen(
   file,
   value,
   properties,
-  { verbose = false} = {  }
+  { verbose = false } = {}
 ) {
   const name = putValuePropertyOpen.name;
   let e = new Error();
   e.name = name;
-  cliconsole.process_start( {name, verbose });
+  cliconsole.process_start({ name, verbose });
   if (value == undefined) {
     e.message = "value esta indefinido";
     throw e;
@@ -217,17 +214,17 @@ function putValuePropertyOpen(
       });
       const complete = JSON.stringify(data_, null, 2);
       writeFileSync(file, complete);
-      cliconsole.data( {
+      cliconsole.data({
         name,
         message: `Objetos crados ${value}`,
         verbose,
       });
-      cliconsole.process_done( { name,verbose,status:true });
+      cliconsole.process_done({ name, verbose, status: true });
       return true;
     })
     .catch((error) => {
-      cliconsole.process_done( { name,verbose,status:false });
-      cliconsole.error({error});
+      cliconsole.process_done({ name, verbose, status: false });
+      cliconsole.error({ error });
       return error;
     });
 }
@@ -249,13 +246,13 @@ function putValueProperty(
   value,
   data,
   properties,
-  { verbose = false} = {  }
+  { verbose = false } = {}
 ) {
   //TODO: crear una vercion de esta funcion open addValueOpen
   const name = putValueProperty.name;
   let e = new Error();
   e.name = name;
-  cliconsole.process_start({ name,verbose });
+  cliconsole.process_start({ name, verbose });
   if (value == undefined) {
     e.message = "value esta indefinido";
     throw e;
@@ -310,8 +307,8 @@ function putValueProperty(
     const data_ = json_Sync.putValueData(data, properties, value, { verbose });
     const complete = JSON.stringify(data_, null, 2);
     writeFileSync(file, complete);
-    cliconsole.data({name, message: `Objetos crados: ${value}`, verbose});
-    cliconsole.process_done( {name, verbose, status:true}); 
+    cliconsole.data({ name, message: `Objetos crados: ${value}`, verbose });
+    cliconsole.process_done({ name, verbose, status: true });
     resolve(true);
   });
 }
@@ -325,22 +322,18 @@ function putValueProperty(
  * @return {Promise <boolean>} `true` si existe la propiedad.
  * @example `checkProperty('./archivo.json','vaso');` verifica si existe `vaso` o `checkProperty('./archivo.json','vaso.color');` verifica si existe `color` ola
  */
-function checkProperty(
-  data,
-  properties,
-  { verbose = false} = { }
-) {
+function checkProperty(data, properties, { verbose = false } = {}) {
   const name = checkProperty.name;
-  cliconsole.process_start({name, verbose });
+  cliconsole.process_start({ name, verbose });
   return new Promise((resolve) => {
     // PROCESS
     if (json_Sync.checkProperty(data, properties, { verbose })) {
-      cliconsole.data( {
+      cliconsole.data({
         name,
         message: `Existen las propiedades ${properties}`,
         verbose,
       });
-      cliconsole.process_done({name, verbose, status:true});
+      cliconsole.process_done({ name, verbose, status: true });
       resolve(true);
     } else {
       cliconsole.warning({
@@ -348,7 +341,7 @@ function checkProperty(
         message: `No existe la propiedad ${properties}`,
         verbose,
       });
-      cliconsole.process_done({name, verbose, status:false });
+      cliconsole.process_done({ name, verbose, status: false });
       resolve(false);
     }
   });
@@ -362,23 +355,23 @@ function checkProperty(
  * @param {*} innerProps
  * @example `checkProperty('./archivo.json','vaso');` verifica si existe `vaso` o `checkProperty('./archivo.json','vaso.color');` verifica si existe `color` ola
  */
-function checkPropertyOpen(file, properties, { verbose = false} = {}) {
+function checkPropertyOpen(file, properties, { verbose = false } = {}) {
   //TODO: actualizar. ver checkProperty sync.
   const name = checkPropertyOpen.name;
-  cliconsole.process_start({name, verbose });
+  cliconsole.process_start({ name, verbose });
   return new Promise((resolve) => {
     const data = readFileSync(file, "utf-8");
     resolve(data);
   })
     .then((read) => {
       const data = JSON.parse(read);
-      if (json_Sync.checkProperty(data, properties ,{ verbose })) {
-        cliconsole.data( {
+      if (json_Sync.checkProperty(data, properties, { verbose })) {
+        cliconsole.data({
           name,
           message: `Existen las propiedades ${properties}`,
           verbose,
         });
-        cliconsole.process_done({name, verbose,status:true });
+        cliconsole.process_done({ name, verbose, status: true });
         return true;
       } else {
         cliconsole.warning({
@@ -386,13 +379,13 @@ function checkPropertyOpen(file, properties, { verbose = false} = {}) {
           message: `No existe la propiedad ${properties}`,
           verbose,
         });
-        cliconsole.process_done({name, verbose, status:false });
+        cliconsole.process_done({ name, verbose, status: false });
         return false;
       }
     })
     .catch((error) => {
-      cliconsole.process_done({name, verbose, status:false });
-      cliconsole.error({error});
+      cliconsole.process_done({ name, verbose, status: false });
+      cliconsole.error({ error });
       return error;
     });
 }
@@ -408,7 +401,7 @@ function checkPropertyOpen(file, properties, { verbose = false} = {}) {
 //TODO: falta por terminar.
 function checkJson(file, { verbose } = { verbose: false }) {
   const name = checkJson.name;
-  cliconsole.process_start({name, verbose });
+  cliconsole.process_start({ name, verbose });
 }
 /**
  * Verifica un grupo de propiedades dentro de un json.
@@ -426,7 +419,7 @@ function checkJson(file, { verbose } = { verbose: false }) {
  */
 function checkProperties({ verbose }) {
   const name = checkProperties.name;
-  cliconsole.process_start({name,verbose});
+  cliconsole.process_start({ name, verbose });
 }
 //TODO: crer una funcion que anadir el primer {} a un archivo json vacio.
 //TODO: crear una funcion que verifique si existen propiedades internas con un switch.

@@ -4,18 +4,18 @@
 
 [README 📄](./README.md "README")
 
-* [TODO](#todo)
-* [DOING](#doing)
-* [DONE](#done)
-* [FIX](#fix)
-* [backlog](#backlog)
-* [sources](#sources)
+- [TODO](#todo)
+- [DOING](#doing)
+- [DONE](#done)
+- [FIX](#fix)
+- [backlog](#backlog)
+- [sources](#sources)
 
 ## TODO
 
 [menu](#kanbas)
 
-* crear un objeto debug, que actue muy parecido al paquete debug que ya existe, osea solo se ejecuta cuando la variable de entorno debug, esta activada, tambien se puede activar desde un archivo de configuracion.
+- crear un objeto debug, que actue muy parecido al paquete debug que ya existe, osea solo se ejecuta cuando la variable de entorno debug, esta activada, tambien se puede activar desde un archivo de configuracion.
 
 ## DOING
 

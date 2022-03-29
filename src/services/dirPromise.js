@@ -65,7 +65,7 @@ function editAtribute(dir, attribute, state, { verbose = false } = {}) {
       }
     })
     .catch((error) => {
-      cliconsole.process_done({name, verbose, status: false });
+      cliconsole.process_done({ name, verbose, status: false });
       cliconsole.error({ error });
       return error;
     });
@@ -95,7 +95,7 @@ async function addContent(content, { verbose = false } = {}) {
     cliconsole.process_done({ name, verbose, status: true });
     return true;
   } catch (error) {
-    cliconsole.process_done({name, verbose, status: false });
+    cliconsole.process_done({ name, verbose, status: false });
     cliconsole.error({ error });
     return error;
   }
@@ -109,7 +109,7 @@ function createDir(
   { verbose = false, overwrite = false, recursive = false } = {}
 ) {
   const name = createDir.name;
-  cliconsole.process_start({name, verbose });
+  cliconsole.process_start({ name, verbose });
   let e = new Error();
   e.name(name);
   //TODO: crear una vercion de esta funcion que verifique el contenido de la carpeta checkDirContent()
@@ -122,13 +122,13 @@ function createDir(
         cliconsole.warning({
           name,
           desciption: `La carpeta: ${dir} ya existe`,
-          verbose:true,
+          verbose: true,
         });
         if (overwrite) {
           cliconsole.warning({
             name,
             description: `Se va a sobreescribir la carpeta: ${dir}`,
-            verbose:true,
+            verbose: true,
           });
           rmSync(dir, { recursive: true, force: true });
         } else {
@@ -137,13 +137,13 @@ function createDir(
         }
       }
       mkdirSync(dir, { recursive: recursive });
-      cliconsole.info({message:`Carpeta: ${dir} creada`});
-      cliconsole.process_done( { name,verbose,status:true });
+      cliconsole.info({ message: `Carpeta: ${dir} creada` });
+      cliconsole.process_done({ name, verbose, status: true });
       return true;
     })
     .catch((error) => {
-      cliconsole.process_done({name, verbose, status: false });
-      cliconsole.error({error});
+      cliconsole.process_done({ name, verbose, status: false });
+      cliconsole.error({ error });
       return error;
     });
 }
