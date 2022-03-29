@@ -1,6 +1,6 @@
 {
   "name": "@core_/cli-tools",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "description": "Un modulo, con un conjunto de herramientas para crear cli's con node.js",
   "main": "./dist/index.js",
   "scripts": {
