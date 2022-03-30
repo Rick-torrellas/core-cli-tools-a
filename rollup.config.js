@@ -5,10 +5,6 @@ export default [
     output: [
       {
         file: "./dist/index.js",
-        format: "cjs",
-      },
-      {
-        file: "./dist/index.es.js",
         format: "es",
         exports: "named",
       },

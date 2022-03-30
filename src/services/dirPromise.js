@@ -147,9 +147,8 @@ function createDir(
       return error;
     });
 }
-let dirPromise = {};
+export let dirPromise = {};
 dirPromise.checkDir = checkDir;
 dirPromise.editAtribute = editAtribute;
 dirPromise.createDir = createDir;
 dirPromise.addContent = addContent;
-export default dirPromise;

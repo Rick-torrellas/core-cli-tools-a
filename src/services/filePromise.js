@@ -1,5 +1,5 @@
 import { existsSync, writeFileSync } from "fs";
-import cliconsole from "@core_/cli-console";
+import { cliconsole } from "@core_/cli-console";
 //TODO: comentar mejor 🍡
 /**
  * Vertifica si existe un archivo
@@ -85,8 +85,7 @@ function createFile(file, content, { verbose = false } = {}) {
       return err;
     });
 }
-let filePromise = {};
+export let filePromise = {};
 filePromise.checkFile = checkFile;
 filePromise.putContent = putContent;
 filePromise.createFile = createFile;
-export default filePromise;

@@ -2,7 +2,7 @@
  * Modulo con promesas para controlar las funciones relacionadas con los archivos json.
  * @module services/env
  */ //
-import cliconsole from "@core_/cli-console";
+import { cliconsole } from "@core_/cli-console";
 import { json_Sync } from "./json_Sync";
 import { readFileSync, writeFileSync } from "fs";
 //TODO: remplazar readFile y writeFile por sus verciones asyncronas.
@@ -423,7 +423,7 @@ function checkProperties({ verbose }) {
 }
 //TODO: crer una funcion que anadir el primer {} a un archivo json vacio.
 //TODO: crear una funcion que verifique si existen propiedades internas con un switch.
-let json_Promise = {};
+export let json_Promise = {};
 json_Promise.checkProperty = checkProperty;
 json_Promise.checkPropertyOpen = checkPropertyOpen;
 json_Promise.checkJson = checkJson;
@@ -434,4 +434,3 @@ json_Promise.readJsonObject = readJsonObject;
 json_Promise.putValueProperty = putValueProperty;
 json_Promise.putValuePropertyOpen = putValuePropertyOpen;
 json_Promise.checkProperties = checkProperties;
-export default json_Promise;

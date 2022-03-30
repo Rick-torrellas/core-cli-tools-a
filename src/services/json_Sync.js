@@ -2,9 +2,8 @@
  * Modulo con funciones syncronas para controlar las funciones relacionadas con los archivos json.
  * @module services/env
  */
-// const debug = require("./debug");
 import { readFileSync } from "fs";
-import cliconsole from "@core_/cli-console";
+import { cliconsole } from "@core_/cli-console";
 /**
  * Crea una nueva propiedad a la data, y se asigna un valor.
  * @return {object} Retorna la data modificaada
@@ -661,7 +660,7 @@ function putValueDataOpen__({
     throw e;
   }
 }
-let json_Sync = {};
+export let json_Sync = {};
 json_Sync.createPropertyData = createPropertyData;
 json_Sync.replacePropertyData = replacePropertyData;
 json_Sync.checkProperty = checkProperty;
@@ -670,4 +669,3 @@ json_Sync.checkPropertyType = checkPropertyType;
 json_Sync.checkPropertyTypeOpen = checkPropertyTypeOpen;
 json_Sync.putValueData = putValueData;
 json_Sync.putValueDataOpen = putValueDataOpen;
-export default json_Sync;
