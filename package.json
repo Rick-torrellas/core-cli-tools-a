@@ -19,7 +19,7 @@
   "bugs": {
     "url": "https://github.com/Rick-torrellas/core-cli-tools/issues"
   },
-  "keywords": [],
+  "keywords": ["nodejs", "cli", "javascript","rollup","eslint","prettier","npm-package"],
   "author": "Ricardo Torrellas <ricardo.torrejas@gmail.com> (https://github.com/Rick-torrellas)",
   "license": "MIT",
   "devDependencies": {
