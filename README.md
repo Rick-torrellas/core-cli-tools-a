@@ -35,12 +35,6 @@ npm i @core_/cli-tools
 
 [🏠](#nav "Back home")
 
-Para empezar a usar la herramienta, en el directorio de tu proyecto, usa:
-
-```npm
-npx core-scripts
-```
-
 ## Comandos
 
 - init: Inicia los elemtentos de la app
